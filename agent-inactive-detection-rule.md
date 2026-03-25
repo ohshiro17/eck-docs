@@ -1,5 +1,7 @@
 # Elastic Agent 停止検知ルール 構築手順書
 
+> 最終更新: 2026-03-26 | 作成者: ECK検証チーム
+
 ## 1. 概要
 
 Elastic Agent がチェックインを停止した（inactive / offline 状態になった）ことを検知し、Webhook で外部に通知する仕組みの構築手順を記載する。
