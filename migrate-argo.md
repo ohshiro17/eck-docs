@@ -330,6 +330,33 @@ argocd cert add-tls gitlab.example.com --from /path/to/ca.crt
 ```bash
 kubectl logs -n argocd deploy/argocd-repo-server | grep -i "error\|failed"
 ```
+## 6. ArgoCD と ECK のラベル競合対策
+
+### 問題
+
+ArgoCD はリソース管理のために `app.kubernetes.io/instance` ラベルを自動付与する。
+ECK Operator も同じラベルを使用するため、Sync のたびに競合が発生する。
+
+### 解決策
+
+`ignoreDifferences` と `RespectIgnoreDifferences=true` をセットで設定する。
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: eck
+  namespace: argocd
+spec:
+  ignoreDifferences:
+    - group: elasticsearch.k8s.elastic.co
+      kind: Elasticsearch
+      jsonPointers:
+        - /metadata/labels/app.kubernetes.io~1instance
+  syncPolicy:
+    syncOptions:
+      - RespectIgnoreDifferences=true
+```
 
 ### エラー別対処表
 
