@@ -358,6 +358,26 @@ spec:
       - RespectIgnoreDifferences=true
 ```
 
+# Helmリリース名の指定について
+
+ArgoCDでHelmチャートをデプロイする際、デフォルトではArgoCDのアプリケーション名がそのままHelmのリリース名になる。
+
+既存のHelmリリースを引き継ぐ場合は、`spec.source.helm.releaseName`を明示的に指定する。
+
+```yaml
+spec:
+  source:
+    helm:
+      releaseName: eck-stack  # 既存のHelmリリース名を指定
+```
+
+|項目                         |値          |
+|---------------------------|-----------|
+|ArgoCDアプリ名（`metadata.name`）|`dev-stack`|
+|Helmリリース名（`releaseName`）   |`eck-stack`|
+
+`releaseName`を省略すると、`dev-stack`という名前で新規リリースが作られ、既存の`eck-stack`とは別に二重デプロイされてしまう。
+
 ### エラー別対処表
 
 |エラーメッセージ            |原因              |対処                         |
