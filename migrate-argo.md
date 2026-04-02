@@ -378,6 +378,23 @@ spec:
 
 `releaseName`を省略すると、`dev-stack`という名前で新規リリースが作られ、既存の`eck-stack`とは別に二重デプロイされてしまう。
 
+## `syncPolicy` への `ApplyOutOfSyncOnly` 追加
+
+手動Sync時にOutOfSyncのリソースのみを適用するよう、`eck-application.yaml` の `syncPolicy` に以下を追記する。
+
+```yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ApplyOutOfSyncOnly=true  # OutOfSyncのリソースのみSyncの対象にする
+```
+
+> **補足**: デフォルトではSync時にアプリケーション内の全リソースが `kubectl apply` される。
+> `ApplyOutOfSyncOnly=true` を設定することで、差分があるリソースのみが適用され、既存リソースへの意図しない上書きを防ぐことができる。
+
+
 ### エラー別対処表
 
 |エラーメッセージ            |原因              |対処                         |
